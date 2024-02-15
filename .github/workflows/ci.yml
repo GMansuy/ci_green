@@ -17,4 +17,10 @@ jobs:
       - name: run Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.13.x
-          lhci autorun
+          lhci collect --url=http://localhost:3000 --staticDistDir=./build --numberOfRuns=3 --output=./report.json
+          jq -r '.[0].audits[] | "\(.title): \(.displayValue)"' ./report.json > lighthouse-report.txt
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git add lighthouse-report.txt
+          git commit -m "Add Lighthouse report"
+          git push
